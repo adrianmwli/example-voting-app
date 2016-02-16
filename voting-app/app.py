@@ -12,7 +12,7 @@ option_a = os.getenv('OPTION_A', "Cats")
 option_b = os.getenv('OPTION_B', "Dogs")
 hostname = socket.gethostname()
 
-redis = connect_to_redis("redis")
+redis = connect_to_redis(os.environ.get('REDIS_HOST'))
 app = Flask(__name__)
 
 
