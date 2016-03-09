@@ -2,21 +2,21 @@ version: "2"
 
 services:
   voting-app:
-    build: ./voting-app/.
+    image: rpatan/voting-app
     ports:
       - "5000:80"
     environment:
       - REDIS_HOST=redis
 
   result-app:
-    build: ./result-app/.
+    image: rpatan/result-app
     ports:
       - "5001:80"
     environment:
       - DB_HOST=db
 
   worker:
-    build: ./worker
+    image: rpatan/worker
     environment:
       - REDIS_HOST=redis
       - DB_HOST=db
@@ -27,5 +27,3 @@ services:
 
   db:
     image: postgres:9.4
-
-
