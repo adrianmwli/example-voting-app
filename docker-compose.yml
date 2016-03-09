@@ -4,14 +4,15 @@ services:
   voting-app:
     image: rpatan/voting-app
     ports:
-      - "5000:80"
+      - 80
     environment:
       - REDIS_HOST=redis
+      - constraint:provider==amazonec2
 
   result-app:
     image: rpatan/result-app
     ports:
-      - "5001:80"
+      - 80
     environment:
       - DB_HOST=db
 
@@ -23,7 +24,10 @@ services:
 
   redis:
     image: redis
-    ports: ["6379"]
+    expose:
+      - 6379
+    environment:
+      - constraint:provider==digitalocean
 
   db:
     image: postgres:9.4
