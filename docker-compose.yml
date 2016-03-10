@@ -30,3 +30,5 @@ services:
 
   db:
     image: postgres:9.4
+    environment:
+      - constraint:provider==digitalocean
