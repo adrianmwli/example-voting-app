@@ -7,25 +7,26 @@ import org.json.JSONObject;
 
 class Worker {
   public static void main(String[] args) {
-    try {
-      Jedis redis = connectToRedis(System.getenv("REDIS_HOST"));
-      Connection dbConn = connectToDB(System.getenv("DB_HOST"));
+	while (true) {
+		try {
+		  Jedis redis = connectToRedis(System.getenv("REDIS_HOST"));
+		  Connection dbConn = connectToDB(System.getenv("DB_HOST"));
 
-      System.err.println("Watching vote queue");
+		  System.err.println("Watching vote queue");
 
-      while (true) {
-        String voteJSON = redis.blpop(0, "votes").get(1);
-        JSONObject voteData = new JSONObject(voteJSON);
-        String voterID = voteData.getString("voter_id");
-        String vote = voteData.getString("vote");
+		  while (true) {
+			String voteJSON = redis.blpop(0, "votes").get(1);
+			JSONObject voteData = new JSONObject(voteJSON);
+			String voterID = voteData.getString("voter_id");
+			String vote = voteData.getString("vote");
 
-        System.err.printf("Processing vote for '%s' by '%s'\n", vote, voterID);
-        updateVote(dbConn, voterID, vote);
-      }
-    } catch (SQLException e) {
-      e.printStackTrace();
-      System.exit(1);
-    }
+			System.err.printf("Processing vote for '%s' by '%s'\n", vote, voterID);
+			updateVote(dbConn, voterID, vote);
+		  }
+		} catch (SQLException e) {
+		  e.printStackTrace();
+		}
+	}
   }
 
   static void updateVote(Connection dbConn, String voterID, String vote) throws SQLException {

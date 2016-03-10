@@ -16,7 +16,7 @@ services:
       - DB_HOST=db
 
   worker:
-    image: rpatan/worker
+    image: clabs/worker
     environment:
       - REDIS_HOST=redis
       - DB_HOST=db
