@@ -8,6 +8,7 @@ services:
     environment:
       - REDIS_HOST=redis
       - constraint:provider==digitalocean
+      - constraint:tier==1
 
   result-app:
     image: clabs/result-app
