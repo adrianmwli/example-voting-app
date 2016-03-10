@@ -21,29 +21,34 @@ io.sockets.on('connection', function (socket) {
   });
 });
 
-async.retry(
-  {times: 1000, interval: 1000},
-  function(callback) {
-    pg.connect('postgres://postgres@' + process.env.DB_HOST + '/postgres', function(err, client, done) {
-      if (err) {
-        console.error("Failed to connect to db");
-      }
-      callback(err, client);
-    });
-  },
-  function(err, client) {
-    if (err) {
-      return console.err("Giving up");
-    }
-    console.log("Connected to db");
-    getVotes(client);
-  }
-);
+connect();
+
+function connect() {
+	async.retry(
+	  {times: 1000, interval: 1000},
+	  function(callback) {
+		pg.connect('postgres://postgres@' + process.env.DB_HOST + '/postgres', function(err, client, done) {
+		  if (err) {
+			console.error("Failed to connect to db");
+		  }
+		  callback(err, client);
+		});
+	  },
+	  function(err, client) {
+		if (err) {
+		  return console.err("Giving up");
+		}
+		console.log("Connected to db");
+		getVotes(client);
+	  }
+	);
+}
 
 function getVotes(client) {
   client.query('SELECT vote, COUNT(id) AS count FROM votes GROUP BY vote', [], function(err, result) {
     if (err) {
       console.error("Error performing query: " + err);
+	  connect();
     } else {
       var data = result.rows.reduce(function(obj, row) {
         obj[row.vote] = row.count;

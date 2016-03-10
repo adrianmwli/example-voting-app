@@ -2,14 +2,14 @@ version: "2"
 
 services:
   voting-app:
-    image: rpatan/voting-app
+    image: clabs/voting-app
     ports:
       - "80"
     environment:
       - REDIS_HOST=redis
 
   result-app:
-    image: rpatan/result-app
+    image: clabs/result-app
     ports:
       - "80"
     environment:
